@@ -4,10 +4,10 @@ import InputField from "../components/ui/InputField";
 import ActionButton from "../components/ui/ActionButton";
 
 function Profile() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [user] = useState<any>(null);
+  const [loading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ phone: "", area: "", section: "" });
+  const [form] = useState({ phone: "", area: "", section: "" });
 
   const handleSave = async () => {
     setSaving(true);
@@ -17,7 +17,6 @@ function Profile() {
   const handleImageUpload = async (e: any) => {
     const file = e.target.files[0];
     if (!file) return;
-
   };
 
   if (loading) {
