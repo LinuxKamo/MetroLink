@@ -1,9 +1,10 @@
 import { useState } from "react";
 import ActionButton from "../../shared/components/ui/ActionButton";
-import { Plus, Pencil, Trash } from "lucide-react";
+import { Plus } from "lucide-react";
 import SearchBar from "../../mananger/components/ui/SearchBar";
 import Popup from "../../shared/components/Popup";
 import InputField from "../../shared/components/ui/InputField";
+import DepartmentRow from "../components/ui/DepartmentRow";
 
 function Department() {
   const [departments, setDepartments] = useState<
@@ -66,7 +67,7 @@ function Department() {
     <>
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-2xl font-bold mt-5">Departments</h1>
+          <h1 className="text-2xl font-bold mt-5 text-[#1e293b]">Departments</h1>
           <span className="text-neutral-500/70 text-sm">
             Overview of All departments
           </span>
@@ -79,80 +80,61 @@ function Department() {
         />
       </div>
 
-      <SearchBar placeholder="Search Department" />
+      <div className="mt-6">
+        <SearchBar placeholder="Search Department" />
+      </div>
 
-      {departments.length > 0 ? (
-        <div className="flex flex-col space-y-3 mt-5">
-          {departments.map((department) => (
-            <div
-              key={department._id}
-              className="flex items-center justify-between p-4 border border-neutral-300 rounded-xl hover:bg-neutral-100/60 transition"
-            >
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-neutral-200 flex items-center justify-center font-semibold text-neutral-600">
-                  {department.name[0]}
-                </div>
-
-                <span className="font-medium text-sm text-neutral-700">
-                  {department.name}
-                </span>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => openEditModal(department)}
-                  className="p-2 rounded-lg bg-[#0f4c81]/10 text-[#0f4c81] hover:bg-[#0f4c81]/20 transition"
-                >
-                  <Pencil size={16} />
-                </button>
-
-                <button
-                  onClick={() => handleDelete(department._id)}
-                  className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 transition"
-                >
-                  <Trash size={16} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center mt-10">
-          <span className="text-neutral-500/70 text-sm">
-            No departments found
-          </span>
-        </div>
-      )}
+      <div className="space-y-4 mt-8 flex flex-col">
+        {departments.length > 0 ? (
+          departments.map((department) => (
+            <DepartmentRow 
+              key={department._id} 
+              department={department} 
+              onEdit={openEditModal} 
+              onDelete={handleDelete} 
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-neutral-300">
+            <span className="text-neutral-400 text-sm">
+              No departments found
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* CREATE / EDIT MODAL */}
       {showModal && (
         <Popup isOpen={showModal} onClose={() => setShowModal(false)}>
-          <div>
-            <h1 className="text-lg font-bold mb-3">
+          <div className="space-y-6">
+            <h1 className="text-xl font-bold text-[#1e293b]">
               {isEditing ? "Edit Department" : "New Department"}
             </h1>
 
             <form
-              className="flex flex-col space-y-3"
+              className="flex flex-col space-y-5"
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit();
               }}
             >
               <InputField
-                label="Name"
-                placeholder="Enter Department Name"
+                label="Department Name"
+                placeholder="e.g. Infrastructure"
                 value={formData.name}
                 onChange={handleChange}
               />
 
-              <div className="flex justify-end space-x-2 mt-4">
-                <ActionButton
-                  label="Cancel"
+              <div className="flex justify-end space-x-3 pt-4 border-t border-neutral-100">
+                <button
+                  type="button"
                   onClick={() => setShowModal(false)}
-                />
+                  className="px-4 py-2 text-sm font-semibold text-neutral-500 hover:text-neutral-700 transition-colors"
+                >
+                  Cancel
+                </button>
 
-                <ActionButton label={isEditing ? "Update" : "Create"} />
+                <ActionButton label={isEditing ? "Update Department" : "Create Department"} />
               </div>
             </form>
           </div>

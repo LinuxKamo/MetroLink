@@ -2,6 +2,7 @@ import { useState } from "react";
 import SearchBar from "../../mananger/components/ui/SearchBar";
 import Table from "../../shared/components/Table";
 import type { User } from "../../shared/models/user.type";
+import UserTableRow from "../components/ui/UserTableRow";
 
 function DepartmentUsers() {
   const [search, setSearch] = useState("");
@@ -11,6 +12,7 @@ function DepartmentUsers() {
 
   const users: User[] = [
     {
+      _id: "1",
       name: "John",
       surname: "Doe",
       email: "john@demo.com",
@@ -22,6 +24,7 @@ function DepartmentUsers() {
       profile_image: "",
     },
     {
+      _id: "2",
       name: "Peter",
       surname: "Smith",
       email: "peter@demo.com",
@@ -33,6 +36,7 @@ function DepartmentUsers() {
       profile_image: "",
     },
     {
+      _id: "3",
       name: "David",
       surname: "Johnson",
       email: "david@demo.com",
@@ -44,6 +48,7 @@ function DepartmentUsers() {
       profile_image: "",
     },
     {
+      _id: "4",
       name: "Sarah",
       surname: "Williams",
       email: "sarah@demo.com",
@@ -55,6 +60,7 @@ function DepartmentUsers() {
       profile_image: "",
     },
     {
+      _id: "5",
       name: "Michael",
       surname: "Brown",
       email: "michael@demo.com",
@@ -118,8 +124,7 @@ function DepartmentUsers() {
         <Table
           heading="Department Users"
           tableHeadings={[
-            "",
-            "Usernames",
+            "User Details",
             "Email",
             "Status",
             "Role",
@@ -127,19 +132,13 @@ function DepartmentUsers() {
             "Actions",
           ]}
           row={filteredUsers.map((user) => (
-            <tr className="h-10" key={user.email}>
-              <td></td>
-              <td className="pl-4">
-                {user.name} {user.surname}
-              </td>
-              <td className="pl-4">{user.email}</td>
-              <td className="pl-4">{user.status}</td>
-              <td className="pl-4">{user.role}</td>
-              <td className="pl-4">{user.department}</td>
-              <td className="pl-4">
-                <button className="text-red-500">Delete</button>
-              </td>
-            </tr>
+            <UserTableRow
+              key={user.email}
+              user={user}
+              showStatus={true}
+              showDepartment={true}
+              onDelete={(email) => console.log("Delete", email)}
+            />
           ))}
         />
       </div>

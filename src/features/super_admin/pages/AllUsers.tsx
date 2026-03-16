@@ -2,6 +2,7 @@ import type { User } from "../../shared/models/user.type";
 import { useState } from "react";
 import SearchBar from "../../mananger/components/ui/SearchBar";
 import Table from "../../shared/components/Table";
+import UserTableRow from "../components/ui/UserTableRow";
 
 function AllUsers() {
   const [search, setSearch] = useState("");
@@ -11,30 +12,35 @@ function AllUsers() {
 
   const users: User[] = [
     {
+      _id: "1",
       name: "John",
       surname: "Doe",
       email: "john@demo.com",
       role: "Admin",
     },
     {
+      _id: "2",
       name: "Peter",
       surname: "Smith",
       email: "peter@demo.com",
       role: "forman",
     },
     {
+      _id: "3",
       name: "David",
       surname: "Johnson",
       email: "david@demo.com",
       role: "driver",
     },
     {
+      _id: "4",
       name: "Sarah",
       surname: "Williams",
       email: "sarah@demo.com",
       role: "media",
     },
     {
+      _id: "5",
       name: "Michael",
       surname: "Brown",
       email: "michael@demo.com",
@@ -97,20 +103,14 @@ function AllUsers() {
         {/* USERS GRID */}
         <div className="flex flex-col gap-4">
           <Table
-            heading="All users"
-            tableHeadings={["", "Usernames", "Email", "Role", "Actions"]}
+            heading="Platform Users"
+            tableHeadings={["User Details", "Email Address", "Role", "Actions"]}
             row={filteredUsers.map((user) => (
-              <tr className="h-10" key={user.email}>
-                <td></td>
-                <td className="pl-4 space-x-2">
-                  {user.name} {user.surname}
-                </td>
-                <td className="pl-4">{user.email}</td>
-                <td className="pl-4">{user.role}</td>
-                <td className="pl-4">
-                  <button className="text-red-500">Delete</button>
-                </td>
-              </tr>
+              <UserTableRow 
+                key={user.email} 
+                user={user} 
+                onDelete={(email) => console.log("Delete", email)} 
+              />
             ))}
           />
         </div>

@@ -81,60 +81,71 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
 
   return (
     <>
-      <div className="w-full p-3 border border-neutral-500/10 rounded-xl bg-white/90 space-y-5">
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-3">
-            <div className="bg-blue-950/10 text-blue-900/60 rounded-lg p-4">
-              <MapPin className="size-5" />
+      <div className="w-full bg-white border border-neutral-200 shadow-sm rounded-2xl hover:border-[#0f4c81]/30 hover:shadow-md transition-all group overflow-hidden">
+        <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex space-x-4 items-center">
+            <div className="h-14 w-14 rounded-2xl bg-linear-to-br from-[#0f4c81]/10 to-[#0f4c81]/5 flex items-center justify-center text-[#0f4c81] ring-1 ring-[#0f4c81]/10">
+              <MapPin className="size-6" />
             </div>
 
-            <div className="flex flex-col justify-between">
-              <p>
-                <span className="text-sm font-semibold">{area.name}</span>{" "}
-                <span className="bg-black/60 text-white font-semibold py-1 px-2 text-xs rounded-lg">
-                  {announcementNumber ?? 0} post monthly
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center space-x-3">
+                <span className="text-lg font-bold text-[#1e293b]">{area.name}</span>
+                <span className="px-2 py-0.5 bg-[#0f4c81] text-white text-[10px] font-bold rounded-lg uppercase">
+                  {announcementNumber ?? 0} Monthly Posts
                 </span>
-              </p>
+              </div>
 
-              <span className="text-neutral-500/60 text-sm">
-                {area.sections.length} sections
+              <span className="text-neutral-400 text-sm font-medium">
+                {area.sections.length} Active Sections
               </span>
             </div>
           </div>
 
-          <div className="flex space-x-5 text-neutral-500/50">
-            <Pencil
-              className="size-4 cursor-pointer"
-              onClick={() => openEdits(area)}
-            />
-
-            <Trash
-              className="size-4 cursor-pointer"
-              onClick={() => handleDelete(area)}
-            />
-
-            <ChevronDown
-              className="size-4 cursor-pointer"
+          <div className="flex items-center space-x-2 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-neutral-100">
+            <button
               onClick={() => setExpanded(!expanded)}
-            />
+              className="flex-1 md:flex-none flex items-center justify-center px-4 py-2 bg-neutral-100 text-neutral-600 text-xs font-bold rounded-xl hover:bg-neutral-200 transition-colors"
+            >
+              {expanded ? "Hide Sections" : "View Sections"}
+              <ChevronDown className={`size-4 ml-2 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`} />
+            </button>
+
+            <button
+              onClick={() => openEdits(area)}
+              className="p-2.5 rounded-xl bg-white border border-neutral-100 text-neutral-400 hover:text-[#0f4c81] hover:border-[#0f4c81]/30 hover:bg-[#0f4c81]/5 transition-all shadow-sm"
+              title="Edit Area"
+            >
+              <Pencil size={18} />
+            </button>
+
+            <button
+              onClick={() => handleDelete(area)}
+              className="p-2.5 rounded-xl bg-white border border-neutral-100 text-neutral-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all shadow-sm"
+              title="Delete Area"
+            >
+              <Trash size={18} />
+            </button>
           </div>
         </div>
 
         {expanded && (
-          <div className="pb-5 border-t border-slate-100 pt-4">
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3">
-              Sections
-            </p>
+          <div className="px-6 pb-6 pt-0 animate-fadeIn">
+            <div className="pt-6 border-t border-neutral-100">
+              <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-4">
+                Sections in this area
+              </p>
 
-            <div className="flex flex-wrap gap-2">
-              {area.sections?.map((section) => (
-                <span
-                  key={section._id}
-                  className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-medium"
-                >
-                  {section.name}
-                </span>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {area.sections?.map((section) => (
+                  <div
+                    key={section._id}
+                    className="px-4 py-2 bg-neutral-50 text-[#334155] border border-neutral-100 rounded-xl text-xs font-semibold hover:border-[#0f4c81]/20 hover:bg-white transition-all cursor-default"
+                  >
+                    {section.name}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

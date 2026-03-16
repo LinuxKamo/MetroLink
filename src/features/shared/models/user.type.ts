@@ -1,6 +1,7 @@
 import type { Address } from "./Address.model";
 
 export type User = {
+  _id?: string;
   name: string;
   surname: string;
   email: string;

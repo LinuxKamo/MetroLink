@@ -8,19 +8,21 @@ interface TableProp {
 
 function Table({ row, heading, tableHeadings }: TableProp) {
   return (
-    <div className="bg-white/80 shadow-xl rounded-2xl p-4 border border-gray-100">
-      <h2 className="py-3 font-bold font-serif text-lg tracking-wider text-neutral-500">
-        {heading}
-      </h2>
+    <div className="bg-white shadow-sm rounded-2xl p-6 border border-neutral-200/60">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="font-bold text-lg text-[#1e293b] tracking-tight">
+          {heading}
+        </h2>
+      </div>
 
-      <div className="overflow-x-auto rounded-xl">
-        <table className="min-w-full text-sm rounded-xl">
-          <thead className="bg-[#0f4c81] text-white text-left">
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm border-separate border-spacing-y-2">
+          <thead className="bg-neutral-50/80 text-neutral-500 text-left">
             <tr>
               {tableHeadings.map((head, index) => (
                 <th
                   key={index}
-                  className="px-4 py-3 text-left text-sm font-semibold"
+                  className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider first:rounded-l-xl last:rounded-r-xl"
                 >
                   {head}
                 </th>
