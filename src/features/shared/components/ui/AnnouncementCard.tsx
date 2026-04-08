@@ -8,8 +8,16 @@ import {
   Trash2,
 } from "lucide-react";
 import { memo, useEffect, useState } from "react";
-import { formatAnnouncementDate } from "../../../mananger/utils/date";
+import moment from "moment";
 import Popup from "../Popup";
+
+interface Comment {
+  id: string;
+  username: string;
+  text: string;
+  date: string;
+  replies?: Comment[];
+}
 
 interface AnnouncementCardProps {
   Initials: string;
@@ -53,15 +61,68 @@ function AnnouncementCard({
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
-  const [comments, setComments] = useState<
-    { username: string; comment: string }[]
-  >([]);
-  const handleSendComment = (comment: string) => {
-    // Handle sending comment logic here
-    console.log("Comment sent:", comment);
-    setComments([...comments, { username: "Current User", comment }]);
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      id: "1",
+      username: "Lihle Motaung",
+      text: "This is a great announcement! Very informative.",
+      date: new Date(Date.now() - 3600000).toISOString(),
+      replies: [
+        {
+          id: "1-1",
+          username: "Kamohelo",
+          text: "Agreed, thanks for sharing!",
+          date: new Date(Date.now() - 1800000).toISOString(),
+        },
+      ],
+    },
+    {
+      id: "2",
+      username: "John Doe",
+      text: "Is there any more info on the area coverage?",
+      date: new Date(Date.now() - 7200000).toISOString(),
+      replies: [],
+    },
+  ]);
+  const [editPopupOpen, setEditPopupOpen] = useState(false);
+  const [localContent, setLocalContent] = useState(content);
+  const isEditable = moment().diff(moment(date), "hours") < 24;
+  const [replyingToId, setReplyingToId] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState<string>("");
+  const handleSendComment = (text: string) => {
+    if (!text.trim()) return;
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      username: "Current User",
+      text,
+      date: new Date().toISOString(),
+      replies: [],
+    };
+    setComments([...comments, newComment]);
     setCommentsCountState(commentsCountState + 1);
     setComment("");
+  };
+
+  const handleSendReply = (parentId: string, text: string) => {
+    if (!text.trim()) return;
+    const newReply: Comment = {
+      id: Date.now().toString(),
+      username: "Current User",
+      text,
+      date: new Date().toISOString(),
+    };
+
+    setComments(
+      comments.map((c) => {
+        if (c.id === parentId) {
+          return { ...c, replies: [...(c.replies || []), newReply] };
+        }
+        return c;
+      }),
+    );
+    setCommentsCountState(commentsCountState + 1);
+    setReplyText("");
+    setReplyingToId(null);
   };
   return (
     <div className="flex flex-col h-auto p-5 border border-neutral-400/40 space-y-5 rounded-2xl bg-white w-full">
@@ -73,7 +134,7 @@ function AnnouncementCard({
           <div className="flex flex-col space-y-1">
             <span className="font-semibold text-md">{announcerName}</span>
             <span className="text-neutral-500 text-xs">
-              {formatAnnouncementDate(date)}
+              {moment(date).fromNow()}
             </span>
           </div>
         </div>
@@ -132,7 +193,7 @@ function AnnouncementCard({
       </div>
 
       <div className="text-neutral-500 flex flex-col justify-between h-full space-y-2">
-        <p className="text-sm text-gray-700 mt-2">{content}</p>
+        <p className="text-sm text-gray-700 mt-2">{localContent}</p>
         {imageurl && imageurl.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 mb-5">
             {imageurl.map((url, index) => (
@@ -164,23 +225,92 @@ function AnnouncementCard({
           <div
             className={`relative mt-5 space-y-3 h-fit overflow-scroll overflow-x-hidden`}
           >
-            <div className="flex flex-col space-y-3 mb-15">
-              {comments ? (
-                comments.map((c, i) => (
-                  <div key={i} className="flex flex-col space-y-1">
-                    <div className="flex items-center gap-2 space-x-2">
-                      <div className="bg-linear-to-br from-blue-600 to-blue-900 h-6 w-6 rounded-full flex items-center justify-center text-white text-xs font-bold">
+            <div className="flex flex-col space-y-4 mb-16 pb-4">
+              {comments.length > 0 ? (
+                comments.map((c) => (
+                  <div key={c.id} className="flex flex-col space-y-2">
+                    <div className="flex space-x-2">
+                      <div className="bg-linear-to-br from-blue-600 to-blue-900 h-8 w-8 shrink-0 rounded-full flex items-center justify-center text-white text-xs font-bold">
                         {c.username.charAt(0)}
                       </div>
-                      <span className="text-xs font-semibold">
-                        {c.username}
-                      </span>
+                      <div className="flex flex-col space-y-1 max-w-[85%]">
+                        <div className="bg-neutral-100 rounded-2xl px-3 py-2">
+                          <span className="text-xs font-bold block">
+                            {c.username}
+                          </span>
+                          <p className="text-xs text-neutral-800">{c.text}</p>
+                        </div>
+                        <div className="flex items-center space-x-3 px-2">
+                          <button
+                            onClick={() => setReplyingToId(c.id)}
+                            className="text-[10px] font-bold text-neutral-500 hover:underline"
+                          >
+                            Reply
+                          </button>
+                          <span className="text-[10px] text-neutral-400">
+                            {moment(c.date).fromNow()}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs ml-10">{c.comment}</p>
+
+                    {/* Replies */}
+                    {c.replies && c.replies.length > 0 && (
+                      <div className="ml-10 space-y-3">
+                        {c.replies.map((r) => (
+                          <div key={r.id} className="flex space-x-2">
+                            <div className="bg-linear-to-br from-blue-600 to-blue-900 h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+                              {r.username.charAt(0)}
+                            </div>
+                            <div className="flex flex-col space-y-1 max-w-[85%]">
+                              <div className="bg-neutral-100 rounded-2xl px-3 py-2">
+                                <span className="text-[10px] font-bold block">
+                                  {r.username}
+                                </span>
+                                <p className="text-[10px] text-neutral-800">
+                                  {r.text}
+                                </p>
+                              </div>
+                              <div className="flex items-center space-x-3 px-2">
+                                <span className="text-[10px] text-neutral-400">
+                                  {moment(r.date).fromNow()}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Reply Input */}
+                    {replyingToId === c.id && (
+                      <div className="ml-10 flex space-x-2 items-center animate-fadeIn">
+                        <div className="bg-linear-to-br from-blue-600 to-blue-900 h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+                          C
+                        </div>
+                        <div className="relative grow">
+                          <input
+                            autoFocus
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter")
+                                handleSendReply(c.id, replyText);
+                              if (e.key === "Escape") setReplyingToId(null);
+                            }}
+                            type="text"
+                            placeholder="Write a reply..."
+                            className="w-full text-[10px] bg-neutral-100 border-none py-1.5 px-3 rounded-xl focus:ring-1 focus:ring-blue-500 outline-none"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
-                <div> no comments</div>
+                <div className="text-center text-neutral-400 text-xs py-4">
+                  No comments yet. Be the first to comment!
+                </div>
               )}
             </div>
             <div className="flex flex-row absolute bottom-0 w-full space-x-5">
@@ -232,16 +362,18 @@ function AnnouncementCard({
         <div className="flex flex-col space-y-4">
           <h2 className="text-lg font-semibold">Manage Announcement</h2>
 
-          <button
-            className="flex items-center gap-2 p-3 rounded-lg hover:bg-neutral-100 transition"
-            onClick={() => {
-              setOptionsOpen(false);
-              console.log("Edit clicked");
-            }}
-          >
-            <Edit className="size-4" />
-            Edit Announcement
-          </button>
+          {isEditable && (
+            <button
+              className="flex items-center gap-2 p-3 rounded-lg hover:bg-neutral-100 transition"
+              onClick={() => {
+                setOptionsOpen(false);
+                setEditPopupOpen(true);
+              }}
+            >
+              <Edit className="size-4" />
+              Edit Announcement
+            </button>
+          )}
 
           <button
             className="flex items-center gap-2 p-3 rounded-lg text-red-600 hover:bg-red-50 transition"
@@ -287,6 +419,39 @@ function AnnouncementCard({
                 {section}
               </div>
             ))}
+          </div>
+        </div>
+      </Popup>
+      <Popup isOpen={editPopupOpen} onClose={() => setEditPopupOpen(false)}>
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Edit Announcement</h2>
+          <div className="flex flex-col space-y-2">
+            <label className="text-sm font-medium text-neutral-600">
+              Content
+            </label>
+            <textarea
+              value={localContent}
+              onChange={(e) => setLocalContent(e.target.value)}
+              className="w-full h-32 p-3 text-sm border border-neutral-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+              placeholder="Update announcement content..."
+            />
+          </div>
+          <div className="flex space-x-3 justify-end">
+            <button
+              onClick={() => {
+                setLocalContent(content); // Reset on cancel
+                setEditPopupOpen(false);
+              }}
+              className="px-4 py-2 text-sm font-medium text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => setEditPopupOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition"
+            >
+              Save Changes
+            </button>
           </div>
         </div>
       </Popup>

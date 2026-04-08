@@ -6,13 +6,17 @@ import { MANANGER_CREATE_ANNOUNCEMENT } from "../../mananger/consts/route.manang
 import AnnouncementCard from "../components/ui/AnnouncementCard";
 import image from "../../../assets/back.png";
 import type { Anouncement } from "../../mananger/models/Anouncement.model";
+import { useRoleSelection } from "../context/roleselection.context";
+import { SUPER_ADMIN_CREATE_ANNOUNCEMENT } from "../../super_admin/consts/routes.super_admin";
+import { MEDIA_MAKE_ANNOUNCEMTS } from "../../media/const/routes.media";
 
 function Announcements() {
   const navigate = useNavigate();
   const [areaFilter, setAreaFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const { currentRole } = useRoleSelection();
 
-  const announcements:Anouncement[] = [
+  const announcements: Anouncement[] = [
     {
       Areas: [
         "Mailula",
@@ -101,7 +105,15 @@ function Announcements() {
         <ActionButton
           label="Make Announcement"
           Icon={Plus}
-          onClick={() => navigate(MANANGER_CREATE_ANNOUNCEMENT)}
+          onClick={() =>
+            navigate(
+              currentRole === "superadmin"
+                ? SUPER_ADMIN_CREATE_ANNOUNCEMENT
+                : currentRole === "manager"
+                  ? MANANGER_CREATE_ANNOUNCEMENT
+                  : MEDIA_MAKE_ANNOUNCEMTS,
+            )
+          }
         />
       </div>
 
@@ -115,8 +127,11 @@ function Announcements() {
         text-neutral-500 bg-white/90 border border-neutral-500/20 font-semibold"
         >
           <ArrowUpDown className="size-3" />{" "}
-          <span title={`sort from ${sortOrder != "newest" ? "Newest" : "Oldest"}`}>{sortOrder === "newest" ? "Newest" : "Oldest"}</span>
-          
+          <span
+            title={`sort from ${sortOrder != "newest" ? "Newest" : "Oldest"}`}
+          >
+            {sortOrder === "newest" ? "Newest" : "Oldest"}
+          </span>
         </button>
         {areas.map((area) => (
           <button

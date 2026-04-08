@@ -7,6 +7,8 @@ import ActionButton from "../../shared/components/ui/ActionButton";
 import SearchBar from "../../mananger/components/ui/SearchBar";
 import AreaRow from "../../mananger/components/ui/AreaRow";
 import Popup from "../../shared/components/Popup";
+import InputFieldDropDown from "../../mananger/components/ui/InputFieldDropDown";
+import { MUNICIPALITIES } from "../../mananger/consts/municipalities";
 
 function Areas() {
   const [areas, setAreas] = useState<Area[]>([]);
@@ -23,6 +25,7 @@ function Areas() {
       {
         _id: 1,
         name: "Mailula",
+        municipality: "Municipality of Vosloorus",
         sections: [
           {
             _id: 1,
@@ -35,6 +38,7 @@ function Areas() {
       {
         _id: 2,
         name: "Mabopane",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -46,6 +50,7 @@ function Areas() {
       {
         _id: 3,
         name: "Soshanguve",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -63,6 +68,7 @@ function Areas() {
       {
         _id: 4,
         name: "Garankuwa",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -79,6 +85,7 @@ function Areas() {
       {
         _id: 5,
         name: "Pretoria",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -102,8 +109,13 @@ function Areas() {
 
     setLoading(false);
   };
-  const [form, setForm] = useState<{ name: string; sections: Section[] }>({
+  const [form, setForm] = useState<{
+    name: string;
+    municipality: string;
+    sections: Section[];
+  }>({
     name: "",
+    municipality: "",
     sections: [],
   });
 
@@ -136,7 +148,7 @@ function Areas() {
   };
 
   const handleSubmit = () => {
-    if (!form.name || form.sections.length === 0) return;
+    if (!form.name || !form.municipality || form.sections.length === 0) return;
   };
 
   return (
@@ -184,7 +196,7 @@ function Areas() {
           {areas
             .filter((a) => a.name.toLowerCase().includes(search.toLowerCase()))
             .map((area) => (
-              <AreaRow area={area} />
+              <AreaRow key={area._id} area={area} />
             ))}
         </div>
       )}
@@ -192,11 +204,12 @@ function Areas() {
       {openCreate && (
         <Popup isOpen={openCreate} onClose={() => setOpenCreate(!openCreate)}>
           <div className="space-y-4">
-            <InputField
+            <InputFieldDropDown
               label="Municipality"
-              value={form.name}
-              placeholder="e.g. Municipality of Vosloorus"
-              onChange={(v) => setForm((prev) => ({ ...prev, name: v }))}
+              value={form.municipality}
+              placeholder="Select Municipality"
+              options={MUNICIPALITIES}
+              onChange={(v) => setForm((prev) => ({ ...prev, municipality: v }))}
             />
             <InputField
               label="Area Name"
@@ -204,6 +217,7 @@ function Areas() {
               placeholder="e.g. North District"
               onChange={(v) => setForm((prev) => ({ ...prev, name: v }))}
             />
+
 
             {/* Sections */}
             <div>

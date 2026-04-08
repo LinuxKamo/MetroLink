@@ -5,20 +5,27 @@ import Popup from "../../../shared/components/Popup";
 import type { Area } from "../../models/Area.model";
 import InputFieldDropDown from "./InputFieldDropDown";
 import type { Section } from "../../models/Section.model";
-import InputField from "../../../shared/components/ui/InputField";
 import { MANANGER_DRIVER_PROFILE_DETAIL } from "../../consts/route.mananger";
 import { useNavigate } from "react-router-dom";
 
 interface DriverCardProps {
   initials: string;
   name: string;
+  surname: string;
   email: string;
+  phoneNumber: string;
+  licensePlate: string;
+  truckCapacity: number;
   status: "on trip" | "available";
   lastTripDate: string;
 }
 function DriverCard({
   name,
+  surname,
   email,
+  phoneNumber,
+  licensePlate,
+  truckCapacity,
   status,
   initials,
   lastTripDate,
@@ -30,6 +37,7 @@ function DriverCard({
     {
       _id: 1,
       name: "Mailula",
+      municipality: "Municipality of Vosloorus",
       sections: [
         {
           _id: 1,
@@ -42,6 +50,7 @@ function DriverCard({
     {
       _id: 2,
       name: "Mabopane",
+      municipality: "Tshwane Municipality",
       sections: [
         { _id: 1, name: "Section 1", image_url: ["./mask.png", "./mask.png"] },
       ],
@@ -49,6 +58,7 @@ function DriverCard({
     {
       _id: 3,
       name: "Soshanguve",
+      municipality: "Tshwane Municipality",
       sections: [
         {
           _id: 1,
@@ -62,6 +72,7 @@ function DriverCard({
     {
       _id: 4,
       name: "Garankuwa",
+      municipality: "Tshwane Municipality",
       sections: [
         { _id: 1, name: "Section 1", image_url: ["./mask.png", "./mask.png"] },
         { _id: 2, name: "Section 2", image_url: ["./mask.png", "./mask.png"] },
@@ -70,6 +81,7 @@ function DriverCard({
     {
       _id: 5,
       name: "Pretoria",
+      municipality: "Tshwane Municipality",
       sections: [
         { _id: 1, name: "Section 1", image_url: ["./mask.png", "./mask.png"] },
         { _id: 2, name: "Section 2", image_url: ["./mask.png"] },
@@ -82,6 +94,7 @@ function DriverCard({
     {
       _id: "1",
       name: "Mailula",
+      municipality: "Municipality of Vosloorus",
       sections: [
         {
           _id: "1",
@@ -103,6 +116,7 @@ function DriverCard({
     {
       _id: "1",
       name: "Extension 28",
+      municipality: "Municipality of Vosloorus",
       sections: [
         {
           _id: "1",
@@ -127,6 +141,7 @@ function DriverCard({
       ],
     },
   ];
+
   const [showAreaSections, setShowAreaSections] = useState<Section[]>([]);
   const toggleAreaSections = (areaId: string) => {
     const area = areas.find((a) => String(a._id) === areaId);
@@ -196,8 +211,38 @@ function DriverCard({
                 <span>{initials}</span>
               </div>
               <div className="flex flex-col space-y-1">
-                <span className="font-semibold text-md">{name}</span>
+                <span className="font-semibold text-md">{name} {surname}</span>
                 <span className="text-neutral-500 text-xs">{email}</span>
+              </div>
+            </div>
+
+            {/* Basic Driver Details */}
+            <div className="flex flex-col space-y-2 text-neutral-600/90 bg-neutral-400/10 p-4 rounded-lg">
+              <span className="text-sm font-bold">Driver Information</span>
+              <div className="flex flex-col space-y-1 text-xs font-medium">
+                <div className="flex justify-between">
+                  <span className="text-neutral-500">Phone:</span>
+                  <span>{phoneNumber}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-500">Email:</span>
+                  <span>{email}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Truck Details */}
+            <div className="flex flex-col space-y-2 text-neutral-600/90 bg-neutral-400/10 p-4 rounded-lg">
+              <span className="text-sm font-bold">Truck Details</span>
+              <div className="flex flex-col space-y-1 text-xs font-medium">
+                <div className="flex justify-between">
+                  <span className="text-neutral-500">Registration:</span>
+                  <span className="uppercase font-semibold">{licensePlate}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-500">Capacity:</span>
+                  <span>{truckCapacity.toLocaleString()} Liters</span>
+                </div>
               </div>
             </div>
             <div className="flex flex-col space-y-2 text-neutral-600/90 bg-neutral-400/10 p-4 rounded-lg">
@@ -264,7 +309,6 @@ function DriverCard({
                   </div>
                 </div>
               )}
-              <InputField label="Date" type="datetime-local" />
             </div>
             <ActionButton label="Assign Trip" isDisabled={true} />
           </div>

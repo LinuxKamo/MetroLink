@@ -5,6 +5,9 @@ import type { Section } from "../../models/Section.model";
 import Popup from "../../../shared/components/Popup";
 import ActionButton from "../../../shared/components/ui/ActionButton";
 import InputField from "../../../shared/components/ui/InputField";
+import InputFieldDropDown from "./InputFieldDropDown";
+import { MUNICIPALITIES } from "../../consts/municipalities";
+import { useRoleSelection } from "../../../shared/context/roleselection.context";
 
 interface AreaRowParam {
   area: Area;
@@ -15,9 +18,15 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
   const [expanded, setExpanded] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editArea, setEditArea] = useState<Area | null>(null);
+  const { currentRole } = useRoleSelection();
 
-  const [form, setForm] = useState<{ name: string; sections: Section[] }>({
+  const [form, setForm] = useState<{
+    name: string;
+    municipality: string;
+    sections: Section[];
+  }>({
     name: "",
+    municipality: "",
     sections: [],
   });
 
@@ -27,6 +36,7 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
 
     setForm({
       name: area.name,
+      municipality: area.municipality || "",
       sections: area.sections || [],
     });
 
@@ -66,7 +76,7 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
   };
 
   const handleSubmit = () => {
-    if (!form.name || form.sections.length === 0) return;
+    if (!form.name || !form.municipality || form.sections.length === 0) return;
 
     if (editArea) {
       // update API
@@ -90,7 +100,14 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
 
             <div className="flex flex-col space-y-1">
               <div className="flex items-center space-x-3">
-                <span className="text-lg font-bold text-[#1e293b]">{area.name}</span>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-[#0f4c81] font-bold uppercase tracking-tight">
+                    {area.municipality}
+                  </span>
+                  <span className="text-lg font-bold text-[#1e293b]">
+                    {area.name}
+                  </span>
+                </div>
                 <span className="px-2 py-0.5 bg-[#0f4c81] text-white text-[10px] font-bold rounded-lg uppercase">
                   {announcementNumber ?? 0} Monthly Posts
                 </span>
@@ -108,7 +125,9 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
               className="flex-1 md:flex-none flex items-center justify-center px-4 py-2 bg-neutral-100 text-neutral-600 text-xs font-bold rounded-xl hover:bg-neutral-200 transition-colors"
             >
               {expanded ? "Hide Sections" : "View Sections"}
-              <ChevronDown className={`size-4 ml-2 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`size-4 ml-2 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+              />
             </button>
 
             <button
@@ -155,6 +174,17 @@ function AreaRow({ area, announcementNumber }: AreaRowParam) {
       {openEdit && (
         <Popup isOpen={openEdit} onClose={() => setOpenEdit(false)}>
           <div className="space-y-4">
+            {currentRole === "superadmin" && (
+              <InputFieldDropDown
+                label="Municipality"
+                value={form.municipality}
+                placeholder="Select Municipality"
+                options={MUNICIPALITIES}
+                onChange={(v) =>
+                  setForm((prev) => ({ ...prev, municipality: v }))
+                }
+              />
+            )}
             <InputField
               label="Area Name"
               value={form.name}

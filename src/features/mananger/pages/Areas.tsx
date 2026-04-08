@@ -23,6 +23,7 @@ function Areas() {
       {
         _id: 1,
         name: "Mailula",
+        municipality: "Municipality of Vosloorus",
         sections: [
           {
             _id: 1,
@@ -35,6 +36,7 @@ function Areas() {
       {
         _id: 2,
         name: "Mabopane",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -46,6 +48,7 @@ function Areas() {
       {
         _id: 3,
         name: "Soshanguve",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -63,6 +66,7 @@ function Areas() {
       {
         _id: 4,
         name: "Garankuwa",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -79,6 +83,7 @@ function Areas() {
       {
         _id: 5,
         name: "Pretoria",
+        municipality: "Tshwane Municipality",
         sections: [
           {
             _id: 1,
@@ -102,8 +107,13 @@ function Areas() {
 
     setLoading(false);
   };
-  const [form, setForm] = useState<{ name: string; sections: Section[] }>({
+  const [form, setForm] = useState<{
+    name: string;
+    municipality: string;
+    sections: Section[];
+  }>({
     name: "",
+    municipality: "",
     sections: [],
   });
 
@@ -136,7 +146,7 @@ function Areas() {
   };
 
   const handleSubmit = () => {
-    if (!form.name || form.sections.length === 0) return;
+    if (!form.name || !form.municipality || form.sections.length === 0) return;
   };
 
   return (
@@ -184,7 +194,7 @@ function Areas() {
           {areas
             .filter((a) => a.name.toLowerCase().includes(search.toLowerCase()))
             .map((area) => (
-              <AreaRow area={area} />
+              <AreaRow key={area._id} area={area} />
             ))}
         </div>
       )}

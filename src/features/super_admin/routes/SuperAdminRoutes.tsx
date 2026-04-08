@@ -10,6 +10,7 @@ import {
   SUPER_ADMIN_USER_DETAILS,
   SUPER_ADMIN_USERS_MUNICIPALITY,
   SUPER_ADMIN_NOTIFICATIONS,
+  SUPER_ADMIN_CREATE_ANNOUNCEMENT,
 } from "../consts/routes.super_admin";
 import PageLayout from "../../layout/PageLayout";
 import Dashboard from "../pages/Dashboard";
@@ -24,6 +25,7 @@ import MunicipalityUsers from "../pages/MunicipalityUsers";
 import UsersManagement from "../pages/UsersManagement";
 import MunicipalityPage from "../pages/Municipality";
 import Notifications from "../../shared/pages/Notifications";
+import MakeAnnouncement from "../../shared/pages/MakeAnnouncement";
 
 export const SuperAdminRoutes = () => {
   return (
@@ -37,6 +39,10 @@ export const SuperAdminRoutes = () => {
         />
       </Route>
       <Route path={SUPER_ADMIN_ANNOUNCEMENTS} element={<Announcements />} />
+      <Route
+        path={SUPER_ADMIN_CREATE_ANNOUNCEMENT}
+        element={<MakeAnnouncement />}
+      />
       <Route path={SUPER_ADMIN_LOGS} element={<Logs />} />
       <Route path={SUPER_ADMIN_ANALYTICS} element={<Analytics />} />
       <Route path={SUPER_ADMIN_AREAS} element={<Areas />} />

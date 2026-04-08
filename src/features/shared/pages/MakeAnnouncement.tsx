@@ -10,6 +10,9 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MANANGER_ANNOUNCEMENTS } from "../../mananger/consts/route.mananger";
+import { useRoleSelection } from "../context/roleselection.context";
+import { MEDIA_ANNOUNCEMENTS } from "../../media/const/routes.media";
+import { SUPER_ADMIN_ANNOUNCEMENTS } from "../../super_admin/consts/routes.super_admin";
 
 type Area = {
   id: number;
@@ -34,6 +37,7 @@ export default function MakeAnnouncement() {
   const [areas, setAreas] = useState<Area[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const { currentRole } = useRoleSelection();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const removeMedia = (index: number) => {
     setMediaFiles((prev) => prev.filter((_, i) => i !== index));
@@ -148,7 +152,15 @@ export default function MakeAnnouncement() {
       {/* Header */}
       <div className="flex items-center gap-3">
         <button
-          onClick={() => navigate(MANANGER_ANNOUNCEMENTS)}
+          onClick={() =>
+            navigate(
+              currentRole === "superadmin"
+                ? SUPER_ADMIN_ANNOUNCEMENTS
+                : currentRole === "manager"
+                  ? MANANGER_ANNOUNCEMENTS
+                  : MEDIA_ANNOUNCEMENTS,
+            )
+          }
           title="back"
           className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
         >

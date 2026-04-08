@@ -34,7 +34,6 @@ import {
   MANANGER_DASHBOARD,
   MANANGER_DRIVERS,
   MANANGER_NOTIFICATIONS,
-  MANANGER_PROFILE,
   MANANGER_TRIPTRACKING,
   MANANGER_USERS,
 } from "../mananger/consts/route.mananger";
@@ -70,7 +69,6 @@ function PageLayout() {
     { name: "Users", icon: Users, url: MANANGER_USERS },
     { name: "Analytics", icon: ChartArea, url: MANANGER_ANALYTICS },
     { name: "Notifications", icon: Bell, url: MANANGER_NOTIFICATIONS },
-    { name: "Profile", icon: User, url: MANANGER_PROFILE },
   ];
 
   const adminNav: MenuItem[] = [

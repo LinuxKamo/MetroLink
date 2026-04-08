@@ -3,6 +3,7 @@ export const SUPER_ADMIN_USERS = "/admin/users";
 export const SUPER_ADMIN_USERS_DEPARTMENT = "/admin/users/department";
 export const SUPER_ADMIN_USERS_MUNICIPALITY = "/admin/users/municipality";
 export const SUPER_ADMIN_ANNOUNCEMENTS = "/admin/announcements";
+export const SUPER_ADMIN_CREATE_ANNOUNCEMENT = "/admin/announcements/create";
 export const SUPER_ADMIN_PROFILE = "/admin/profile";
 export const SUPER_ADMIN_SETTINGS = "/admin/settings";
 export const SUPER_ADMIN_LOGS = "/admin/logs";

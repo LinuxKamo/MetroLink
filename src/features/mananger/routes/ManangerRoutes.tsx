@@ -7,7 +7,6 @@ import {
   MANANGER_DRIVER_PROFILE,
   MANANGER_DRIVERS,
   MANANGER_NOTIFICATIONS,
-  MANANGER_PROFILE,
   MANANGER_TRIPTRACKING,
   MANANGER_USERS,
 } from "../consts/route.mananger";
@@ -19,7 +18,6 @@ import PageLayout from "../../layout/PageLayout";
 import TripTracking from "../pages/TripTracking";
 import Areas from "../pages/Areas";
 import Analytics from "../pages/Analytics";
-import Profile from "../../shared/pages/Profile";
 import DriverProfile from "../pages/DriverProfile";
 import MakeAnnouncement from "../../shared/pages/MakeAnnouncement";
 import Notifications from "../../shared/pages/Notifications";
@@ -34,7 +32,6 @@ export const ManangerRoutes = () => {
       <Route path={MANANGER_TRIPTRACKING} element={<TripTracking />} />
       <Route path={MANANGER_AREAS} element={<Areas />} />
       <Route path={MANANGER_ANALYTICS} element={<Analytics />} />
-      <Route path={MANANGER_PROFILE} element={<Profile />} />
       <Route path={MANANGER_DRIVER_PROFILE} element={<DriverProfile />} />
       <Route
         path={MANANGER_CREATE_ANNOUNCEMENT}

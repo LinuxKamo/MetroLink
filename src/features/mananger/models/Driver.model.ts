@@ -8,4 +8,6 @@ export type Driver = {
     lastTripDate: string;
     totaltrips: number;
     phoneNumber: string;
-}
+    truckCapacity: number;
+    licensePlate: string;
+}

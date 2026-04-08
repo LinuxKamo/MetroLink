@@ -15,42 +15,63 @@ function Drivers() {
   const drivers: Array<{
     email: string;
     name: string;
+    surname: string;
     initials: string;
     status: "available" | "on trip";
     lastTripDate: string;
+    phoneNumber: string;
+    licensePlate: string;
+    truckCapacity: number;
   }> = [
     {
       email: "text@texr.com",
-      name: "John Doe",
+      name: "John",
+      surname: "Doe",
       initials: "JD",
       status: "available",
       lastTripDate: "2026-02-15",
+      phoneNumber: "+27 12 345 6789",
+      licensePlate: "ZN 123 GP",
+      truckCapacity: 5000,
     },
     {
       email: "text@texr.com",
-      name: "John Doe",
-      initials: "JD",
+      name: "Jane",
+      surname: "Smith",
+      initials: "JS",
       status: "on trip",
       lastTripDate: "2026-02-15",
+      phoneNumber: "+27 98 765 4321",
+      licensePlate: "RS 987 MP",
+      truckCapacity: 8000,
     },
     {
       email: "text@texr.com",
-      name: "John Doe",
-      initials: "JD",
+      name: "Mike",
+      surname: "Johnson",
+      initials: "MJ",
       status: "available",
       lastTripDate: "2026-02-15",
+      phoneNumber: "+27 45 678 1234",
+      licensePlate: "KP 456 NW",
+      truckCapacity: 12000,
     },
     {
       email: "text@texr.com",
-      name: "John Doe",
-      initials: "JD",
+      name: "Sarah",
+      surname: "Wilson",
+      initials: "SW",
       status: "available",
       lastTripDate: "2026-02-15",
+      phoneNumber: "+27 32 109 8765",
+      licensePlate: "WQ 321 LP",
+      truckCapacity: 10000,
     },
   ];
   const filteredDrivers = drivers.filter((driver) => {
     const matchesSearch =
       driver.name.toLowerCase().includes(search.toLowerCase()) ||
+      driver.surname.toLowerCase().includes(search.toLowerCase()) ||
       driver.email.toLowerCase().includes(search.toLowerCase());
 
     const matchesStatus =
@@ -105,10 +126,15 @@ function Drivers() {
             initials={driver.initials}
             lastTripDate={driver.lastTripDate}
             name={driver.name}
+            surname={driver.surname}
+            phoneNumber={driver.phoneNumber}
+            licensePlate={driver.licensePlate}
+            truckCapacity={driver.truckCapacity}
             status={driver.status}
           />
         ))}
       </div>
+
       {openInviteModal && (
         <Popup
           isOpen={openInviteModal}
